@@ -4,8 +4,7 @@ export interface User {
     token: string;
 }
 
-export interface Task {
-    _id: string;
+export interface UserTask {
     user: string;
     title: string;
     description: string;
