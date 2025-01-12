@@ -51,7 +51,7 @@ try {
     existsUser.generateToken();
     await existsUser.save();
 
-    res.send({message: 'Username and password are correct', existsUser, token});
+    res.send({message: 'Username and password are correct', existsUser});
 } catch(e) {
     if(e instanceof Error.ValidationError) {
         res.status(400).send(e);

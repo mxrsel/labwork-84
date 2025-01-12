@@ -10,3 +10,5 @@ export interface UserTask {
     description: string;
     status: string;
 }
+
+export type TaskWithoutUser = Omit<UserTask, 'user'>;
