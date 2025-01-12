@@ -104,3 +104,43 @@ tasksRouter.put('/:id', async (req, res, next) => {
         next(e);
     }
 });
+
+tasksRouter.delete('/:id', async(req, res, next) => {
+    try {
+        const {id} = req.params;
+        const token = req.get('Authorization');
+
+        if (!token) {
+            res.status(404).send({error: 'Token is not found'});
+            return
+        }
+
+        const userToken = await User.findOne({token});
+
+        if (!userToken) {
+            res.status(400).send("Wrong user token");
+            return
+        }
+
+        const task = await Task.findById(id);
+        if (!task) {
+            res.status(404).send("Task not found");
+            return
+        }
+
+        if (task.user.toString() !== userToken._id.toString()) {
+            res.status(403).send({ error: "This is not your task, please try again :)"});
+            return
+        }
+
+        await Task.findByIdAndDelete(id);
+
+        res.send({message: 'Task has been successfully deleted'});
+    } catch(e) {
+        if (e instanceof Error.ValidationError) {
+            res.status(400).send(e);
+            return
+        }
+        next(e);
+    }
+})
